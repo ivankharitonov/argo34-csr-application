@@ -116,6 +116,13 @@
             box-shadow: none;
         }
 
+        /* Ensure button is clickable */
+        .btn-primary {
+            position: relative;
+            z-index: 1000;
+            pointer-events: auto;
+        }
+
         .form-group {
             margin-bottom: 30px;
             text-align: left;
@@ -317,7 +324,7 @@
                 <button type="button" class="back-btn" onclick="showLandingPage()">
                     Back
                 </button>
-                <button type="submit" class="btn-primary" id="submit-btn" disabled>
+                <button type="submit" class="btn-primary" id="submit-btn" disabled onclick="console.log('Button clicked via onclick'); return false;">
                     Submit Application
                 </button>
             </div>
@@ -374,7 +381,7 @@
         }
 
         // Wait for DOM to be ready
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Add event listeners for form validation
             document.getElementById('principles-test').addEventListener('change', function () {
                 if (validateFileType(this, ['.pdf'], 'Personality Test Result')) {
@@ -390,87 +397,102 @@
 
             document.getElementById('salary-expectations').addEventListener('input', checkFormCompletion);
 
-            // Add direct click listener for debugging
-            document.getElementById('submit-btn').addEventListener('click', function(e) {
-                console.log('Submit button clicked directly');
+            // Add multiple event listeners for debugging
+            const submitBtn = document.getElementById('submit-btn');
+            
+            submitBtn.addEventListener('click', function(e) {
+                console.log('Submit button clicked directly', e);
             });
+            
+            submitBtn.addEventListener('mousedown', function(e) {
+                console.log('Submit button mousedown', e);
+            });
+            
+            submitBtn.addEventListener('mouseup', function(e) {
+                console.log('Submit button mouseup', e);
+            });
+            
+            // Try adding the click listener with capture
+            submitBtn.addEventListener('click', function(e) {
+                console.log('Submit button clicked (capture phase)', e);
+            }, true);
 
             // Handle form submission
             document.getElementById('application-form').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            console.log('Form submission started');
+                e.preventDefault();
+                console.log('Form submission started');
 
-            const submitBtn = document.getElementById('submit-btn');
-            submitBtn.textContent = 'Submitting...';
-            submitBtn.disabled = true;
+                const submitBtn = document.getElementById('submit-btn');
+                submitBtn.textContent = 'Submitting...';
+                submitBtn.disabled = true;
 
-            // Collect inputs
-            const principlesInput = document.getElementById('principles-test');
-            const voiceInput = document.getElementById('voice-recording');
-            const salaryEl = document.getElementById('salary-expectations');
+                // Collect inputs
+                const principlesInput = document.getElementById('principles-test');
+                const voiceInput = document.getElementById('voice-recording');
+                const salaryEl = document.getElementById('salary-expectations');
 
-            const principlesFile = principlesInput.files[0] || null;
-            const voiceFile = voiceInput.files[0] || null;
+                const principlesFile = principlesInput.files[0] || null;
+                const voiceFile = voiceInput.files[0] || null;
 
-            // Optional client-side size limits
-            if (principlesFile && principlesFile.size > 10 * 1024 * 1024) {
-                alert('Principles test file is too large (max 10MB).');
-                resetBtn();
-                return;
-            }
-            if (voiceFile && voiceFile.size > 25 * 1024 * 1024) {
-                alert('Voice recording is too large (max 25MB).');
-                resetBtn();
-                return;
-            }
-
-            // Build multipart body
-            const formData = new FormData();
-            formData.append('salary_expectations', salaryEl.value.trim());
-            formData.append('position', 'Customer Service Representative - CDMX');
-            formData.append('submission_time', new Date().toISOString());
-
-            if (principlesFile) formData.append('principles_test', principlesFile, principlesFile.name);
-            if (voiceFile) formData.append('voice_recording', voiceFile, voiceFile.name);
-
-            const webhookUrl = 'https://hook.eu2.make.com/93jwx07ot5a483llpfc5dsfsj7cvsvmp';
-
-            try {
-                const res = await fetch(webhookUrl, { method: 'POST', body: formData }); // no headers
-                if (!res.ok) {
-                    const txt = await safeText(res);
-                    throw new Error(`HTTP ${res.status} ${res.statusText || ''} ${txt ? '– ' + txt : ''}`);
+                // Optional client-side size limits
+                if (principlesFile && principlesFile.size > 10 * 1024 * 1024) {
+                    alert('Principles test file is too large (max 10MB).');
+                    resetBtn();
+                    return;
+                }
+                if (voiceFile && voiceFile.size > 25 * 1024 * 1024) {
+                    alert('Voice recording is too large (max 25MB).');
+                    resetBtn();
+                    return;
                 }
 
-                // Success UI
-                showSuccess();
-                document.getElementById('application-form').reset();
-                checkFormCompletion();
-            } catch (err) {
-                console.error('Upload failed:', err);
-                alert(`There was an error submitting your application. ${String(err.message || err)}`);
-            } finally {
-                resetBtn();
+                // Build multipart body
+                const formData = new FormData();
+                formData.append('salary_expectations', salaryEl.value.trim());
+                formData.append('position', 'Customer Service Representative - CDMX');
+                formData.append('submission_time', new Date().toISOString());
+
+                if (principlesFile) formData.append('principles_test', principlesFile, principlesFile.name);
+                if (voiceFile) formData.append('voice_recording', voiceFile, voiceFile.name);
+
+                const webhookUrl = 'https://hook.eu2.make.com/93jwx07ot5a483llpfc5dsfsj7cvsvmp';
+
+                try {
+                    const res = await fetch(webhookUrl, { method: 'POST', body: formData }); // no headers
+                    if (!res.ok) {
+                        const txt = await safeText(res);
+                        throw new Error(`HTTP ${res.status} ${res.statusText || ''} ${txt ? '– ' + txt : ''}`);
+                    }
+
+                    // Success UI
+                    showSuccess();
+                    document.getElementById('application-form').reset();
+                    checkFormCompletion();
+                } catch (err) {
+                    console.error('Upload failed:', err);
+                    alert(`There was an error submitting your application. ${String(err.message || err)}`);
+                } finally {
+                    resetBtn();
+                }
+            });
+
+            function resetBtn() {
+                const submitBtn = document.getElementById('submit-btn');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Application';
             }
-        });
 
-        function resetBtn() {
-            const submitBtn = document.getElementById('submit-btn');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit Application';
-        }
-
-        async function safeText(res) {
-            try {
-                return await res.text();
-            } catch {
-                return '';
+            async function safeText(res) {
+                try {
+                    return await res.text();
+                } catch {
+                    return '';
+                }
             }
-        }
 
-        function showSuccess() {
-            document.getElementById('success-message').classList.add('show');
-        }
+            function showSuccess() {
+                document.getElementById('success-message').classList.add('show');
+            }
 
             // Format salary input with commas
             document.getElementById('salary-expectations').addEventListener('input', function (e) {
