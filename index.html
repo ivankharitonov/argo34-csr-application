@@ -298,7 +298,7 @@
 
             <div class="success-message" id="success-message">
                 <strong>🎉 Application Submitted Successfully!</strong><br><br>
-                Thank you for your interest in the Customer Service Representative position. 
+                Thank you for your interest in the Customer Service Representative position.
                 We have received your personality test results, voice recording, and salary expectations.<br><br>
                 Our team will review your materials and get back to you as soon as we have an update.
             </div>
@@ -514,21 +514,44 @@
             }
 
             function showSuccess() {
+                console.log('showSuccess called');
+                
                 // Show success message
                 document.getElementById('success-message').classList.add('show');
-                
-                // Hide the form fields
+
+                // Hide the form fields more directly
                 const formGroups = document.querySelectorAll('.form-group');
-                formGroups.forEach(group => group.style.display = 'none');
-                
-                // Hide the submit buttons
+                console.log('Found form groups:', formGroups.length);
+                formGroups.forEach(group => {
+                    group.style.display = 'none';
+                    console.log('Hiding form group:', group);
+                });
+
+                // Hide the submit buttons - try multiple selectors
                 const buttonContainer = document.querySelector('div[style*="text-align: center"]');
+                console.log('Button container found:', buttonContainer);
                 if (buttonContainer) {
                     buttonContainer.style.display = 'none';
                 }
                 
+                // Also try hiding buttons directly
+                const backBtn = document.querySelector('.back-btn');
+                const submitBtn = document.getElementById('submit-btn');
+                if (backBtn) {
+                    backBtn.style.display = 'none';
+                    console.log('Hiding back button');
+                }
+                if (submitBtn) {
+                    submitBtn.style.display = 'none';
+                    console.log('Hiding submit button');
+                }
+
                 // Keep only the form title visible
-                document.querySelector('.form-title').style.display = 'block';
+                const formTitle = document.querySelector('.form-title');
+                if (formTitle) {
+                    formTitle.style.display = 'block';
+                    console.log('Keeping form title visible');
+                }
             }
 
             // Format salary input with commas
