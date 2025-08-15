@@ -402,6 +402,14 @@
 
             submitBtn.addEventListener('click', function (e) {
                 console.log('Submit button clicked directly', e);
+                
+                // Manually trigger form submission if it's not happening automatically
+                if (!submitBtn.disabled) {
+                    console.log('Manually triggering form submission');
+                    const form = document.getElementById('application-form');
+                    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                    form.dispatchEvent(submitEvent);
+                }
             });
 
             submitBtn.addEventListener('mousedown', function (e) {
