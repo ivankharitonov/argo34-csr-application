@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Argo34 - CSR Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f1f1f1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 90%;
+            max-width: 600px;
+            min-height: 500px;
+        }
+
+        .page {
+            display: none;
+            padding: 60px 40px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-container {
+            margin-bottom: 10px;
+        }
+
+        .logo-img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 5px;
+        }
+
+        .company-name {
+            color: #164589;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .position {
+            color: #666;
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .description {
+            color: #777;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 50px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: justify;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #2c5aa0, #3d6bb3);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 20px rgba(44, 90, 160, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(44, 90, 160, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2c5aa0;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group input[type="file"],
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2c5aa0;
+            background: white;
+        }
+
+        .file-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-btn {
+            background: none;
+            border: 2px solid #2c5aa0;
+            color: #2c5aa0;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        .form-title {
+            color: #2c5aa0;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .job-posting-link {
+            display: inline-block;
+            color: #164589;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 20px;
+            border: 2px solid #164589;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        .job-posting-link:hover {
+            background: #164589;
+            color: white;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                margin: 20px;
+            }
+
+            .page {
+                padding: 40px 30px;
+            }
+
+            .company-name {
+                font-size: 2rem;
+            }
+
+            .logo-img {
+                max-width: 150px;
+            }
+
+
+
+            .position {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+
+        <!-- Page 1: Landing Page -->
+        <div class="page active" id="landing-page">
+            <div class="logo-container">
+                <img src="http://old.ccirussia.org/__csr_form/logo.png" alt="Argo Logo" class="logo-img">
+            </div>
+            <div class="position">Customer Service Representative - CDMX</div>
+            <a href="https://www.linkedin.com/jobs/view/4256524211/" target="_blank" class="job-posting-link">View Job
+                Posting</a>
+            <div class="description">
+                As part of our ongoing commitment to excellence and innovation, Argo 34 is expanding our services to
+                include talent acquisition for a diverse range of industries. We are excited to leverage our expertise
+                in hiring top talent for our clients, ensuring they have the best professionals to drive their success.
+                We are currently seeking qualified candidates for Balance Health (<a href="http://www.balancehealth.com"
+                    target="_blank" style="color: #164589;">http://www.balancehealth.com</a>) — a leading healthcare
+                provider based in the United States — to join their team and contribute to their continued growth and
+                mission of delivering outstanding patient care.
+            </div>
+            <button class="btn-primary" onclick="showApplicationPage()">
+                Start the Application Process
+            </button>
+        </div>
+
+        <!-- Page 2: Application Form -->
+        <div class="page" id="application-page">
+            <div class="form-title">Application Requirements</div>
+
+            <div class="success-message" id="success-message">
+                <strong>Success!</strong> Your application has been submitted successfully.
+                We'll review your materials and get back to you as soon as we have an update.
+            </div>
+
+            <form id="application-form" enctype="multipart/form-data"></form>
+            <div class="form-group">
+                <label for="principles-test">Personality Test Result *</label>
+                <input type="file" id="principles-test" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" required>
+                <div class="file-info">Please sign up at <a href="https://principlesyou.com/" target="_blank"
+                        style="color: #164589;">https://principlesyou.com/</a>, complete the test, and download the
+                    PDF of your detailed results. The test takes approximately one hour.<br><strong>Accepted
+                        formats: PDF only</strong></div>
+            </div>
+
+            <div class="form-group">
+                <label for="voice-recording">Voice Recording Cover Message *</label>
+                <input type="file" id="voice-recording" accept=".m4a,.wav,.mp3" required>
+                <div class="file-info">In the message, please introduce yourself by stating your name, sharing a bit
+                    about your background, and explaining why you're interested in this
+                    position.<br><strong>Accepted
+                        formats: MP3, WAV, M4A, AAC, OGG, FLAC, WMA, AIFF, AMR, 3GP, OPUS</strong></div>
+            </div>
+
+            <div class="form-group">
+                <label for="salary-expectations">Salary Expectations (MXN per month) *</label>
+                <input type="text" id="salary-expectations" placeholder="e.g., 15,000" required>
+                <div class="file-info">Please specify your expected monthly salary in Mexican Pesos</div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button type="button" class="back-btn" onclick="showLandingPage()">
+                    Back
+                </button>
+                <button type="submit" class="btn-primary" id="submit-btn" disabled>
+                    Submit Application
+                </button>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Page navigation functions
+        function showApplicationPage() {
+            document.getElementById('landing-page').classList.remove('active');
+            document.getElementById('application-page').classList.add('active');
+        }
+
+        function showLandingPage() {
+            document.getElementById('application-page').classList.remove('active');
+            document.getElementById('landing-page').classList.add('active');
+            // Reset form and hide success message
+            document.getElementById('application-form').reset();
+            document.getElementById('success-message').classList.remove('show');
+            checkFormCompletion();
+        }
+
+        // Form validation and submission
+        function checkFormCompletion() {
+            const principlesTest = document.getElementById('principles-test').files.length > 0;
+            const voiceRecording = document.getElementById('voice-recording').files.length > 0;
+            const salaryExpectations = document.getElementById('salary-expectations').value.trim() !== '';
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = !(principlesTest && voiceRecording && salaryExpectations);
+        }
+
+        // File type validation functions
+        function validateFileType(input, allowedTypes, fieldName) {
+            const file = input.files[0];
+            if (file) {
+                const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+                if (!allowedTypes.includes(fileExtension)) {
+                    alert(`Invalid file type for ${fieldName}. Please upload a file with one of these extensions: ${allowedTypes.join(', ')}`);
+                    input.value = '';
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Add event listeners for form validation
+        document.getElementById('principles-test').addEventListener('change', function () {
+            if (validateFileType(this, ['.pdf'], 'Principles Test Result')) {
+                checkFormCompletion();
+            }
+        });
+
+        document.getElementById('voice-recording').addEventListener('change', function () {
+            if (validateFileType(this, ['.mp3', '.wav', '.m4a', '.aac', '.ogg', '.flac', '.wma', '.aiff', '.amr', '.3gp', '.opus'], 'Voice Recording')) {
+                checkFormCompletion();
+            }
+        });
+
+        document.getElementById('salary-expectations').addEventListener('input', checkFormCompletion);
+
+        // Handle form submission
+        document.getElementById('application-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+
+            // Collect inputs
+            const principlesInput = document.getElementById('principles-test');
+            const voiceInput = document.getElementById('voice-recording');
+            const salaryEl = document.getElementById('salary-expectations');
+
+            const principlesFile = principlesInput.files[0] || null;
+            const voiceFile = voiceInput.files[0] || null;
+
+            // Optional client-side size limits
+            if (principlesFile && principlesFile.size > 10 * 1024 * 1024) {
+                alert('Principles test file is too large (max 10MB).');
+                resetBtn();
+                return;
+            }
+            if (voiceFile && voiceFile.size > 25 * 1024 * 1024) {
+                alert('Voice recording is too large (max 25MB).');
+                resetBtn();
+                return;
+            }
+
+            // Build multipart body
+            const formData = new FormData();
+            formData.append('salary_expectations', salaryEl.value.trim());
+            formData.append('position', 'Customer Service Representative - CDMX');
+            formData.append('submission_time', new Date().toISOString());
+
+            if (principlesFile) formData.append('principles_test', principlesFile, principlesFile.name);
+            if (voiceFile) formData.append('voice_recording', voiceFile, voiceFile.name);
+
+            const webhookUrl = 'https://hook.eu2.make.com/93jwx07ot5a483llpfc5dsfsj7cvsvmp';
+
+            try {
+                const res = await fetch(webhookUrl, { method: 'POST', body: formData }); // no headers
+                if (!res.ok) {
+                    const txt = await safeText(res);
+                    throw new Error(`HTTP ${res.status} ${res.statusText || ''} ${txt ? '– ' + txt : ''}`);
+                }
+
+                // Success UI
+                showSuccess();
+                document.getElementById('application-form').reset();
+                checkFormCompletion();
+            } catch (err) {
+                console.error('Upload failed:', err);
+                alert(`There was an error submitting your application. ${String(err.message || err)}`);
+            } finally {
+                resetBtn();
+            }
+        });
+
+        function resetBtn() {
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Application';
+        }
+
+        async function safeText(res) {
+            try {
+                return await res.text();
+            } catch {
+                return '';
+            }
+        }
+
+        function showSuccess() {
+            document.getElementById('success-message').classList.add('show');
+        }
+
+        // Format salary input with commas
+        document.getElementById('salary-expectations').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/,/g, '');
+            if (!isNaN(value) && value !== '') {
+                e.target.value = parseInt(value).toLocaleString();
+            }
+            checkFormCompletion();
+        });
+
+        // Initial form validation check
+        checkFormCompletion();
+    </script>
+</body>
+
+</html>
