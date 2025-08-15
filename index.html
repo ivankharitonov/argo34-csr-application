@@ -402,7 +402,7 @@
 
             submitBtn.addEventListener('click', function (e) {
                 console.log('Submit button clicked directly', e);
-                
+
                 // Manually trigger form submission if it's not happening automatically
                 if (!submitBtn.disabled) {
                     console.log('Manually triggering form submission');
@@ -460,8 +460,24 @@
                 formData.append('position', 'Customer Service Representative - CDMX');
                 formData.append('submission_time', new Date().toISOString());
 
-                if (principlesFile) formData.append('principles_test', principlesFile, principlesFile.name);
-                if (voiceFile) formData.append('voice_recording', voiceFile, voiceFile.name);
+                if (principlesFile) {
+                    console.log('Principles file:', principlesFile.name, principlesFile.type, principlesFile.size);
+                    // Ensure proper MIME type for PDF
+                    const principlesBlob = new Blob([principlesFile], { type: principlesFile.type || 'application/pdf' });
+                    formData.append('principles_test', principlesBlob, principlesFile.name);
+                }
+                if (voiceFile) {
+                    console.log('Voice file:', voiceFile.name, voiceFile.type, voiceFile.size);
+                    // Ensure proper MIME type for audio
+                    const voiceBlob = new Blob([voiceFile], { type: voiceFile.type || 'audio/mpeg' });
+                    formData.append('voice_recording', voiceBlob, voiceFile.name);
+                }
+
+                // Debug FormData contents
+                console.log('FormData contents:');
+                for (let [key, value] of formData.entries()) {
+                    console.log(key, value);
+                }
 
                 const webhookUrl = 'https://hook.eu2.make.com/93jwx07ot5a483llpfc5dsfsj7cvsvmp';
 
