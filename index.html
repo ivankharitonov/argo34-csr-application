@@ -299,11 +299,11 @@
 
             <div class="form-group">
                 <label for="voice-recording">Voice Recording Cover Message *</label>
-                <input type="file" id="voice-recording" accept=".m4a,.wav,.mp3" required>
+                <input type="file" id="voice-recording" accept=".mp3,.wav,.m4a,.aac,.ogg,.flac,.wma,.aiff,.amr,.3gp,.opus" required>
                 <div class="file-info">In the message, please introduce yourself by stating your name, sharing a bit
                     about your background, and explaining why you're interested in this
                     position.<br><strong>Accepted
-                        formats: M4A, WAV, MP3</strong></div>
+                        formats: MP3, WAV, M4A, AAC, OGG, FLAC, WMA, AIFF, AMR, 3GP, OPUS</strong></div>
             </div>
 
             <div class="form-group">
@@ -346,8 +346,12 @@
             const voiceRecording = document.getElementById('voice-recording').files.length > 0;
             const salaryExpectations = document.getElementById('salary-expectations').value.trim() !== '';
 
+            console.log('Form validation:', { principlesTest, voiceRecording, salaryExpectations });
+
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = !(principlesTest && voiceRecording && salaryExpectations);
+            
+            console.log('Submit button disabled:', submitBtn.disabled);
         }
 
         // File type validation functions
@@ -376,7 +380,7 @@
         });
 
         document.getElementById('voice-recording').addEventListener('change', function () {
-            if (validateFileType(this, ['.m4a', '.wav', '.mp3'], 'Voice Recording')) {
+            if (validateFileType(this, ['.mp3', '.wav', '.m4a', '.aac', '.ogg', '.flac', '.wma', '.aiff', '.amr', '.3gp', '.opus'], 'Voice Recording')) {
                 checkFormCompletion();
             }
         });
@@ -386,6 +390,7 @@
         // Handle form submission
         document.getElementById('application-form').addEventListener('submit', async function (e) {
             e.preventDefault();
+            console.log('Form submission started');
 
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.textContent = 'Submitting...';
