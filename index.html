@@ -461,10 +461,10 @@
                 formData.append('submission_time', new Date().toISOString());
 
                 if (principlesFile) {
-                    formData.append('personalitytest', principlesFile, principlesFile.name);
+                    formData.append('pdf', principlesFile, principlesFile.name);
                 }
                 if (voiceFile) {
-                    formData.append('voicerecording', voiceFile, voiceFile.name);
+                    formData.append('audio', voiceFile, voiceFile.name);
                 }
 
 
