@@ -462,15 +462,13 @@
 
                 if (principlesFile) {
                     console.log('Principles file:', principlesFile.name, principlesFile.type, principlesFile.size);
-                    // Ensure proper MIME type for PDF
-                    const principlesBlob = new Blob([principlesFile], { type: principlesFile.type || 'application/pdf' });
-                    formData.append('principles_test', principlesBlob, principlesFile.name);
+                    // Try different field name
+                    formData.append('file1', principlesFile, principlesFile.name);
                 }
                 if (voiceFile) {
                     console.log('Voice file:', voiceFile.name, voiceFile.type, voiceFile.size);
-                    // Ensure proper MIME type for audio
-                    const voiceBlob = new Blob([voiceFile], { type: voiceFile.type || 'audio/mpeg' });
-                    formData.append('voice_recording', voiceBlob, voiceFile.name);
+                    // Try different field name
+                    formData.append('file2', voiceFile, voiceFile.name);
                 }
 
                 // Debug FormData contents
