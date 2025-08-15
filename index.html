@@ -356,7 +356,11 @@
             if (file) {
                 const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
                 if (!allowedTypes.includes(fileExtension)) {
-                    alert(`Invalid file type for ${fieldName}. Please upload a file with one of these extensions: ${allowedTypes.join(', ')}`);
+                    if (fieldName === 'Personality Test Result') {
+                        alert(`Invalid file type for ${fieldName}. Please upload a file with the following extension: .pdf`);
+                    } else {
+                        alert(`Invalid file type for ${fieldName}. Please upload a file with one of these extensions: ${allowedTypes.join(', ')}`);
+                    }
                     input.value = '';
                     return false;
                 }
@@ -366,7 +370,7 @@
 
         // Add event listeners for form validation
         document.getElementById('principles-test').addEventListener('change', function () {
-            if (validateFileType(this, ['.pdf', '.doc', '.docx', '.png', '.jpg', '.jpeg'], 'Principles Test Result')) {
+            if (validateFileType(this, ['.pdf', '.doc', '.docx', '.png', '.jpg', '.jpeg'], 'Personality Test Result')) {
                 checkFormCompletion();
             }
         });
