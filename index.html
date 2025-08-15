@@ -290,11 +290,11 @@
             <form id="application-form" enctype="multipart/form-data"></form>
             <div class="form-group">
                 <label for="principles-test">Personality Test Result *</label>
-                <input type="file" id="principles-test" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" required>
+                <input type="file" id="principles-test" accept=".pdf" required>
                 <div class="file-info">Please sign up at <a href="https://principlesyou.com/" target="_blank"
                         style="color: #164589;">https://principlesyou.com/</a>, complete the test, and download the
                     PDF of your detailed results. The test takes approximately one hour.<br><strong>Accepted
-                        formats: PDF, DOC, DOCX, PNG, JPG, JPEG</strong></div>
+                        format: PDF only</strong></div>
             </div>
 
             <div class="form-group">
@@ -370,7 +370,7 @@
 
         // Add event listeners for form validation
         document.getElementById('principles-test').addEventListener('change', function () {
-            if (validateFileType(this, ['.pdf', '.doc', '.docx', '.png', '.jpg', '.jpeg'], 'Personality Test Result')) {
+            if (validateFileType(this, ['.pdf'], 'Personality Test Result')) {
                 checkFormCompletion();
             }
         });
