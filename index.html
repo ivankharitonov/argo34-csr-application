@@ -299,7 +299,8 @@
 
             <div class="form-group">
                 <label for="voice-recording">Voice Recording Cover Message *</label>
-                <input type="file" id="voice-recording" accept=".mp3,.wav,.m4a,.aac,.ogg,.flac,.wma,.aiff,.amr,.3gp,.opus" required>
+                <input type="file" id="voice-recording"
+                    accept=".mp3,.wav,.m4a,.aac,.ogg,.flac,.wma,.aiff,.amr,.3gp,.opus" required>
                 <div class="file-info">In the message, please introduce yourself by stating your name, sharing a bit
                     about your background, and explaining why you're interested in this
                     position.<br><strong>Accepted
@@ -350,7 +351,7 @@
 
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = !(principlesTest && voiceRecording && salaryExpectations);
-            
+
             console.log('Submit button disabled:', submitBtn.disabled);
         }
 
@@ -372,23 +373,30 @@
             return true;
         }
 
-        // Add event listeners for form validation
-        document.getElementById('principles-test').addEventListener('change', function () {
-            if (validateFileType(this, ['.pdf'], 'Personality Test Result')) {
-                checkFormCompletion();
-            }
-        });
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners for form validation
+            document.getElementById('principles-test').addEventListener('change', function () {
+                if (validateFileType(this, ['.pdf'], 'Personality Test Result')) {
+                    checkFormCompletion();
+                }
+            });
 
-        document.getElementById('voice-recording').addEventListener('change', function () {
-            if (validateFileType(this, ['.mp3', '.wav', '.m4a', '.aac', '.ogg', '.flac', '.wma', '.aiff', '.amr', '.3gp', '.opus'], 'Voice Recording')) {
-                checkFormCompletion();
-            }
-        });
+            document.getElementById('voice-recording').addEventListener('change', function () {
+                if (validateFileType(this, ['.mp3', '.wav', '.m4a', '.aac', '.ogg', '.flac', '.wma', '.aiff', '.amr', '.3gp', '.opus'], 'Voice Recording')) {
+                    checkFormCompletion();
+                }
+            });
 
-        document.getElementById('salary-expectations').addEventListener('input', checkFormCompletion);
+            document.getElementById('salary-expectations').addEventListener('input', checkFormCompletion);
 
-        // Handle form submission
-        document.getElementById('application-form').addEventListener('submit', async function (e) {
+            // Add direct click listener for debugging
+            document.getElementById('submit-btn').addEventListener('click', function(e) {
+                console.log('Submit button clicked directly');
+            });
+
+            // Handle form submission
+            document.getElementById('application-form').addEventListener('submit', async function (e) {
             e.preventDefault();
             console.log('Form submission started');
 
@@ -464,17 +472,18 @@
             document.getElementById('success-message').classList.add('show');
         }
 
-        // Format salary input with commas
-        document.getElementById('salary-expectations').addEventListener('input', function (e) {
-            let value = e.target.value.replace(/,/g, '');
-            if (!isNaN(value) && value !== '') {
-                e.target.value = parseInt(value).toLocaleString();
-            }
+            // Format salary input with commas
+            document.getElementById('salary-expectations').addEventListener('input', function (e) {
+                let value = e.target.value.replace(/,/g, '');
+                if (!isNaN(value) && value !== '') {
+                    e.target.value = parseInt(value).toLocaleString();
+                }
+                checkFormCompletion();
+            });
+
+            // Initial form validation check
             checkFormCompletion();
         });
-
-        // Initial form validation check
-        checkFormCompletion();
     </script>
 </body>
 
