@@ -428,7 +428,7 @@
             // Handle form submission
             document.getElementById('application-form').addEventListener('submit', async function (e) {
                 e.preventDefault();
-                console.log('Form submission started');
+
 
                 const submitBtn = document.getElementById('submit-btn');
                 submitBtn.textContent = 'Submitting...';
@@ -461,21 +461,13 @@
                 formData.append('submission_time', new Date().toISOString());
 
                 if (principlesFile) {
-                    console.log('Principles file:', principlesFile.name, principlesFile.type, principlesFile.size);
-                    // Try different field name
-                    formData.append('file1', principlesFile, principlesFile.name);
+                    formData.append('personalitytest', principlesFile, principlesFile.name);
                 }
                 if (voiceFile) {
-                    console.log('Voice file:', voiceFile.name, voiceFile.type, voiceFile.size);
-                    // Try different field name
-                    formData.append('file2', voiceFile, voiceFile.name);
+                    formData.append('voicerecording', voiceFile, voiceFile.name);
                 }
 
-                // Debug FormData contents
-                console.log('FormData contents:');
-                for (let [key, value] of formData.entries()) {
-                    console.log(key, value);
-                }
+
 
                 const webhookUrl = 'https://hook.eu2.make.com/93jwx07ot5a483llpfc5dsfsj7cvsvmp';
 
